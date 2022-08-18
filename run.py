@@ -24,84 +24,139 @@ def get_files(path):
 def position(bbox):  # 사이즈는 추후에 변경
     tl, tr, br, bl = bbox
     a = 30
-    row = 150
-    col = 245
-    h = 110
-    w = 358
+    h = 78
 
-    if row + a >= bl[1] and 3 * col - a + 3 * w <= tl[0]:
-        return "모돈번호"
+    if h - a <= tl[1] and 2 * h + a >= bl[1]:   # 1행
+        if 235 - a <= tl[0] and 2 * 235 + a >= tr[0]:
+            return "모돈번호"
+        elif 3 * 235 - a <= tl[0] and 4 * 235 + a >= tr[0]:
+            return "웅돈번호"
+        else:
+            pass
 
-    elif row - a <= tl[1] and row + a + h >= bl[1]:  # 1행
-        if col - a <= tl[0] and col + a + w >= tr[0]:
+    elif 2 * h - a <= tl[1] and 3 * h + a >= bl[1]:  # 2행
+        if 104 - a <= tl[0] and 104 + 203 + a >= tr[0]:
             return "출생일(년)"
-        elif 2 * col - a + w <= tl[0] and 2 * col + a + 2 * w >= tr[0]:
+        elif 104 + 203 + 76 - a <= tl[0] and 104 + (2 * 203) + 76 + a >= tr[0]:
             return "출생일(월)"
-        elif 3 * col - a + 2 * w <= tl[0] and 3 * col + a + 3 * w >= tr[0]:
+        elif 104 + (2 * 203) + (2 * 76) - a <= tl[0] and 104 + (3 * 203) + (2 * 76) + a >= tr[0]:
             return "출생일(일)"
         else:
             pass
 
-    elif row - a + h <= tl[1] and row + a + 2 * h >= bl[1]:  # 2행
-        if col - a <= tl[0] and col + a + w >= tr[0]:
+    elif 3 * h - a <= tl[1] and 4 * h + a >= bl[1]:  # 3행
+        if 104 - a <= tl[0] and 104 + 203 + a >= tr[0]:
             return "구입일(년)"
-        elif 2 * col - a + w <= tl[0] and 2 * col + a + 2 * w >= tr[0]:
+        elif 104 + 203 + 76 - a <= tl[0] and 104 + (2 * 203) + 76 + a >= tr[0]:
             return "구입일(월)"
-        elif 3 * col - a + 2 * w <= tl[0] and 3 * col + a + 3 * w >= tr[0]:
+        elif 104 + (2 * 203) + (2 * 76) - a <= tl[0] and 104 + (3 * 203) + (2 * 76) + a >= tr[0]:
             return "구입일(일)"
         else:
             pass
 
-    elif row - a + 2 * h <= tl[1] and row + a + 3 * h >= bl[1]:  # 3행
-        if col - a <= tl[0] and col + a + w >= tr[0]:
+    elif 4 * h - a <= tl[1] and 5 * h + a >= bl[1]:  # 4행
+        if 104 - a <= tl[0] and 104 + 203 + a >= tr[0]:
             return "초발정일(년)"
-        elif 2 * col - a + w <= tl[0] and 2 * col + a + 2 * w >= tr[0]:
+        elif 104 + 203 + 76 - a <= tl[0] and 104 + (2 * 203) + 76 + a >= tr[0]:
             return "초발정일(월)"
-        elif 3 * col - a + 2 * w <= tl[0] and 3 * col + a + 3 * w >= tr[0]:
+        elif 104 + (2 * 203) + (2 * 76) - a <= tl[0] and 104 + (3 * 203) + (2 * 76) + a >= tr[0]:
             return "초발정일(일)"
         else:
             pass
 
-    elif row - a + 3 * h <= tl[1] and row + a + 4 * h >= bl[1]:  # 4행
-        if col - a <= tl[0] and col + a + w >= tr[0]:
-            return "교배일"
-        elif 2 * col - a + w <= tl[0] and 2 * col + a + 2 * w >= tr[0]:
-            return "분만일"
-        elif 3 * col - a + 2 * w <= tl[0] and 3 * col + a + 3 * w >= tr[0]:
-            return "이유일"
+    elif 5 * h - a <= tl[1] and 6 * h + a >= bl[1]:  # 5행
+        if 104 + 203 + 76 - a <= tl[0] and 104 + (2 * 203) + 76 + a >= tr[0]:
+            return "1차 교배일(월)"
+        elif 104 + (2 * 203) + (2 * 76) - a <= tl[0] and 104 + (3 * 203) + (2 * 76) + a >= tr[0]:
+            return "1차 교배일(일)"
         else:
             pass
 
-    elif row - a + 4 * h <= tl[1] and row + a + 5 * h >= bl[1]:  # 5행
-        if col - a <= tl[0] and col + a + w >= tr[0]:
-            return "웅돈번호"
-        elif 2 * col - a + w <= tl[0] and 2 * col + a + 2 * w >= tr[0]:
+    elif 6 * h - a <= tl[1] and 7 * h + a >= bl[1]:  # 6행
+        if 104 + 203 + 76 - a <= tl[0] and 104 + (2 * 203) + 76 + a >= tr[0]:
+            return "2차 교배일(월)"
+        elif 104 + (2 * 203) + (2 * 76) - a <= tl[0] and 104 + (3 * 203) + (2 * 76) + a >= tr[0]:
+            return "2차 교배일(일)"
+        else:
+            pass
+
+    elif 7 * h - a <= tl[1] and 8 * h + a >= bl[1]:  # 7행
+        if 104 + 203 + 76 - a <= tl[0] and 104 + (2 * 203) + 76 + a >= tr[0]:
+            return "재발확인일(월)"
+        elif 104 + (2 * 203) + (2 * 76) - a <= tl[0] and 104 + (3 * 203) + (2 * 76) + a >= tr[0]:
+            return "재발확인일(일)"
+        else:
+            pass
+
+    elif 8 * h - a <= tl[1] and 9 * h + a >= bl[1]:  # 8행
+        if 104 + 203 + 76 - a <= tl[0] and 104 + (2 * 203) + 76 + a >= tr[0]:
+            return "분만예정일(월)"
+        elif 104 + (2 * 203) + (2 * 76) - a <= tl[0] and 104 + (3 * 203) + (2 * 76) + a >= tr[0]:
+            return "분만예정일(일)"
+        else:
+            pass
+
+    elif 9 * h - a <= tl[1] and 10 * h + a >= bl[1]:    # 9행
+        if 104 + 203 + 76 - a <= tl[0] and 104 + (2 * 203) + 76 + a >= tr[0]:
+            return "분만일(월)"
+        elif 104 + (2 * 203) + (2 * 76) - a <= tl[0] and 104 + (3 * 203) + (2 * 76) + a >= tr[0]:
+            return "분만일(일)"
+        else:
+            pass
+
+    elif 10 * h - a <= tl[1] and 11 * h + a >= bl[1]:   # 10행
+        if 104 - a <= tl[0] and 104 + 209 - 52 >= tr[0]:
             return "총산자수"
-        elif 3 * col - a + 2 * w <= tl[0] and 3 * col + a + 3 * w >= tr[0]:
-            return "이유두수"
-        else:
-            pass
-
-    elif row - a + 5 * h <= tl[1] and row + a + 6 * h >= bl[1]:  # 6행
-        if col - a <= tl[0] and col + a + w >= tr[0]:
-            return "재발확인일"
-        elif 2 * col - a + w <= tl[0] and 2 * col + a + 2 * w >= tr[0]:
+        elif (2 * 104) + 209 - a <= tl[0] and (2 * 104) + (2 * 209) - 52 >= tr[0]:
             return "포유개시 두수"
-        elif 3 * col - a + 2 * w <= tl[0] and 3 * col + a + 3 * w >= tr[0]:
-            return "이유체중"
-        else:
-            pass
-
-    elif row - a + 6 * h <= tl[1] and row + a + 7 * h >= bl[1]:  # 7행
-        if col - a <= tl[0] and col + a + w >= tr[0]:
-            return "분만예정일"
-        elif 2 * col - a + w <= tl[0] and 2 * col + a + 2 * w >= tr[0]:
+        elif (3 * 104) + (2 * 209) - a <= tl[0] and (3 * 104) + (3 * 209) - 35 >= tr[0]:
             return "생시체중"
         else:
             pass
 
-    elif row - a + 7 * h <= tl[1] and col - a <= tl[0]:
+    elif 11 * h - a <= tl[1] and 12 * h + a >= bl[1]:   # 11행
+        if 104 + 203 + 76 - a <= tl[0] and 104 + (2 * 203) + 76 + a >= tr[0]:
+            return "이유일(월)"
+        elif 104 + (2 * 203) + (2 * 76) - a <= tl[0] and 104 + (3 * 203) + (2 * 76) + a >= tr[0]:
+            return "이유일(일)"
+        else:
+            pass
+
+    elif 12 * h - a <= tl[1] and 13 * h + a >= bl[1]:   # 12행
+        if 155 - a <= tl[0] and 155 + 313 - 52 >= tr[0]:
+            return "이유두수"
+        elif (2 * 155) + 313 - a <= tl[0] and (2 * 155) + (2 * 313) - 35 >= tr[0]:
+            return "이유체중"
+        else:
+            pass
+
+    elif 13 * h - a <= tl[1] and 14 * h + a >= bl[1]:   # 13행
+        if 94 - a <= tl[0] and 94 + 112 + a >= tr[0]:
+            return "백신1(월)"
+        elif 94 + 112 + 76 - a <= tl[0] and 94 + (2 * 112) + 76 + a >= tr[0]:
+            return "백신1(일)"
+        elif (2 * 94) + (2 * 112) + (2 * 76) - a <= tl[0] and (2 * 94) + (3 * 112) + (2 * 76) + a >= tr[0]:
+            return "백신2(월)"
+        elif (2 * 94) + (3 * 112) + (3 * 76) - a <= tl[0] and (2 * 94) + (4 * 112) + (3 * 76) + a >= tr[0]:
+            return "백신2(일)"
+        else:
+            pass
+
+    elif 14 * h - a <= tl[1] and 15 * h + a >= bl[1]:   # 14행
+        if 94 - a <= tl[0] and 94 + 112 + a >= tr[0]:
+            return "백신3(월)"
+        elif 94 + 112 + 76 - a <= tl[0] and 94 + (2 * 112) + 76 + a >= tr[0]:
+            return "백신3(일)"
+        elif (2 * 94) + (2 * 112) + (2 * 76) - a <= tl[0] and (2 * 94) + (3 * 112) + (2 * 76) + a >= tr[0]:
+            return "백신4(월)"
+        elif (2 * 94) + (3 * 112) + (3 * 76) - a <= tl[0] and (2 * 94) + (4 * 112) + (3 * 76) + a >= tr[0]:
+            return "백신4(일)"
+        else:
+            pass
+
+    elif 15 * h - a <= tl[1]:   # 15행
         return "특이사항"
+
     else:
         pass
 
@@ -125,7 +180,7 @@ if __name__ == '__main__':
 
         filename = os.path.basename(file)
         file = Image.open(file)
-        file = file.resize((2350, 1350))
+        file = file.resize((940, 1330))
         file = np.array(file)
         result = reader.readtext(file)
 
@@ -162,6 +217,7 @@ if __name__ == '__main__':
 
         with open(f'json/result_json/{filename[:-4]}_result.json', 'w') as f:  # json 저장
             json.dump(data, f, indent=2, ensure_ascii=False)
+
 
 
 
