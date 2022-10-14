@@ -1,11 +1,9 @@
 from easyocr.easyocr import *
 import json
 import cv2
-import pickle
 from recognition.demo import *
 import shutil
-from PIL import Image
-import numpy as np
+
 
 def get_files(path):
     file_list = []
@@ -19,6 +17,24 @@ def get_files(path):
 
     return file_list, len(file_list)
 
+
+def imwrite(dir, k, img, params=None):
+    try:
+        filename = f'{k}.jpg'
+        ext = os.path.splitext(filename)[1]
+        result, n = cv2.imencode(ext, img, params)
+
+        if result:
+            with open(f'{dir}/{filename}', mode='w+b') as f:
+                n.tofile(f)
+            return True
+        else:
+            return False
+    except Exception as e:
+        print(e)
+        return False
+
+
 if __name__ == '__main__':
 
     side = "back"
@@ -26,11 +42,9 @@ if __name__ == '__main__':
     files, count = get_files(f'input_img/{side}')
 
     file = cv2.imread(files[0])
-
     file = cv2.resize(file, (619, 850))
     file = cv2.cvtColor(file, cv2.COLOR_BGR2GRAY)
     _, file = cv2.threshold(file, 155, 255, cv2.THRESH_BINARY)
-
 
     h_1 = 80
     h_2 = 65
@@ -84,9 +98,9 @@ if __name__ == '__main__':
             x, y, w, h = v
             cropped_img = file[y:y + h, x:x + w]
             if k == '모돈번호(오)' or k == '1차웅돈번호(오)' or k == '2차웅돈번호(오)':
-                cv2.imwrite(f"{dir_en}/{k}.jpg", cropped_img)
+                imwrite(dir_en, k, cropped_img)
             else:
-                cv2.imwrite(f"{dir_num}/{k}.jpg", cropped_img)
+                imwrite(dir_num, k, cropped_img)
         dict_result = recog(dict_front)
         dict_result['모돈번호'] = dict_result['모돈번호(왼)'] +'-'+ dict_result['모돈번호(오)']
         dict_result['1차웅돈번호'] = dict_result['1차웅돈번호(왼)'] +'-'+ dict_result['1차웅돈번호(오)']
@@ -104,9 +118,9 @@ if __name__ == '__main__':
             x, y, w, h = v
             cropped_img = file[y:y + h, x:x + w]
             if k == '모돈번호(오)':
-                cv2.imwrite(f"{dir_en}/{k}.jpg", cropped_img)
+                imwrite(dir_en, k, cropped_img)
             else:
-                cv2.imwrite(f"{dir_num}/{k}.jpg", cropped_img)
+                imwrite(dir_num, k, cropped_img)
         dict_result = recog(dict_back)
         dict_result['모돈번호'] = dict_result['모돈번호(왼)'] +'-'+ dict_result['모돈번호(오)']
         dict_result['생시체중'] = dict_result['생시체중(왼)'] +'.'+ dict_result['생시체중(오)']
@@ -121,7 +135,7 @@ if __name__ == '__main__':
     shutil.rmtree(f'{dir_num}')
     shutil.rmtree(f'{dir_en}')
 
-    with open('result_json/result.json', 'w') as f:
+    with open('result_json/result.json', 'w', encoding='utf-8') as f:
         json.dump(dict_result, f, indent=4, ensure_ascii=False)
 
     print(dict_result)

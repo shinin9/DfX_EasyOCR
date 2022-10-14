@@ -94,7 +94,7 @@ def demo(opt):
 
                 # calculate confidence score (= multiply of pred_max_prob)
                 confidence_score = pred_max_prob.cumprod(dim=0)[-1]
-
+                img_name = img_name.replace('\\', '/')
                 img_name = img_name.split('/')[-1]
                 if img_name.count(".") == 1:
                     name = img_name.split('.')[0]
@@ -150,7 +150,7 @@ def demo(opt):
 
                 # calculate confidence score (= multiply of pred_max_prob)
                 confidence_score = pred_max_prob.cumprod(dim=0)[-1]
-
+                img_name = img_name.replace('\\', '/')
                 img_name = img_name.split('/')[-1]
                 if img_name.count(".") == 1:
                     name = img_name.split('.')[0]
