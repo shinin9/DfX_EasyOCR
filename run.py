@@ -22,7 +22,7 @@ if __name__ == '__main__':
 
     # p="C:/Users/dian3/flask-ocr/DfX_EasyOCR/"
     # p = "/home/gfarm/DfX_EasyOCR/"
-    p = "/Users/shin-yujeong/Desktop/re/DfX_EasyOCR/"
+    p = "/Users/shin-yujeong/Desktop/DfX_EasyOCR/"
 
     log = open(f'{p}log.txt', 'w')
     log.write('main\n')
@@ -41,10 +41,14 @@ if __name__ == '__main__':
 
     log.write(f'{files}, {count}\n')
     file = cv2.imread(files[0])
+
     log.write(f'{file}\n')
     file = cv2.resize(file, (619, 850))
     file = cv2.cvtColor(file, cv2.COLOR_BGR2GRAY)
     _, file = cv2.threshold(file, 155, 255, cv2.THRESH_BINARY)
+    file = cv2.rectangle(file, (0, 0), (619, 850), (255, 255, 255), 15)
+    file = cv2.dilate(file, np.ones((3, 3), np.uint8), iterations=1)
+    file = cv2.erode(file, np.ones((3, 3), np.uint8), iterations=1)
 
     h_1 = 80
     h_2 = 65
