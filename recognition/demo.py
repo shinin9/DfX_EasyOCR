@@ -13,7 +13,8 @@ from .model import Model_num, Model_en
 device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 
 
-def demo(opt):
+def demo(opt, log):
+    log.write('demo\n')
     if 'CTC' in opt['Prediction']:
         converter_num = CTCLabelConverter(opt['character_num'])
         converter_en = CTCLabelConverter(opt['character_en'])
@@ -30,7 +31,7 @@ def demo(opt):
 
     model_en = Model_en(opt)
     model_en = torch.nn.DataParallel(model_en).to(device)
-
+    log.write(f'{model_en}, {model_num}\n')
     # load model
     model_num.load_state_dict(torch.load(opt['saved_model_num'], map_location=device))
     model_en.load_state_dict(torch.load(opt['saved_model_en'], map_location=device))
@@ -50,7 +51,7 @@ def demo(opt):
         shuffle=False,
         num_workers=int(opt['workers']),
         collate_fn=AlignCollate_demo, pin_memory=True)
-
+    log.write(f'{demo_data_num}, {demo_data_en}\n')
     # predict
     model_num.eval()
     with torch.no_grad():
@@ -76,13 +77,12 @@ def demo(opt):
                 # select max probabilty (greedy decoding) then decode index to character
                 _, preds_index = preds.max(2)
                 preds_str = converter_num.decode(preds_index, length_for_pred)
-
-            log = open(f'./log_demo_result.txt', 'a')
+            # log = open(f'./demo_result.txt', 'a')
             dashed_line = '-' * 80
             head = f'{"image_path":25s}\t{"predicted_labels":25s}\tconfidence score'
-
+            log.write(f'{head}\n')
             print(f'{dashed_line}\n{head}\n{dashed_line}')
-            log.write(f'{dashed_line}\n{head}\n{dashed_line}\n')
+            # log.write(f'{dashed_line}\n{head}\n{dashed_line}\n')
 
             preds_prob = F.softmax(preds, dim=2)
             preds_max_prob, _ = preds_prob.max(dim=2)
@@ -91,7 +91,7 @@ def demo(opt):
                     pred_EOS = pred.find('[s]')
                     pred = pred[:pred_EOS]  # prune after "end of sentence" token ([s])
                     pred_max_prob = pred_max_prob[:pred_EOS]
-
+                log.write(f'{pred}\n')
                 # calculate confidence score (= multiply of pred_max_prob)
                 confidence_score = pred_max_prob.cumprod(dim=0)[-1]
                 img_name = img_name.replace('\\', '/')
@@ -105,8 +105,9 @@ def demo(opt):
                             break
 
                 opt['dict'][name] = pred
+                log.write(f'{name}, {pred}\n')
                 print(f'{name:25s}\t{pred:25s}\t{confidence_score:0.4f}')
-                log.write(f'{name:25s}\t{pred:25s}\t{confidence_score:0.4f}\n')
+                # log.write(f'{name:25s}\t{pred:25s}\t{confidence_score:0.4f}\n')
 
     model_en.eval()
     with torch.no_grad():
@@ -132,13 +133,8 @@ def demo(opt):
                 # select max probabilty (greedy decoding) then decode index to character
                 _, preds_index = preds.max(2)
                 preds_str = converter_en.decode(preds_index, length_for_pred)
-
-            log = open(f'./log_demo_result.txt', 'a')
+            log.write(f'{preds}\n')
             dashed_line = '-' * 80
-            head = f'{"image_path":25s}\t{"predicted_labels":25s}\tconfidence score'
-
-            print(f'{dashed_line}\n{head}\n{dashed_line}')
-            log.write(f'{dashed_line}\n{head}\n{dashed_line}\n')
 
             preds_prob = F.softmax(preds, dim=2)
             preds_max_prob, _ = preds_prob.max(dim=2)
@@ -161,19 +157,20 @@ def demo(opt):
                             break
 
                 opt['dict'][name] = pred
+                log.write(f'{name}, {pred}\n')
                 print(f'{name:25s}\t{pred:25s}\t{confidence_score:0.4f}')
-                log.write(f'{name:25s}\t{pred:25s}\t{confidence_score:0.4f}\n')
+                # log.write(f'{name:25s}\t{pred:25s}\t{confidence_score:0.4f}\n')
 
-            log.close()
-    return opt['dict']
+            # log.close()
+    return opt['dict'], log
 
 
-def recog(dict):
+def recog(dict, log, p):
     opt = {
-        'saved_model_num': 'recognition/custom_pth/ocr_num.pth',
-        'saved_model_en': 'recognition/custom_pth/ocr_en.pth',
-        'image_folder_num': 'cropped_imgs_num',
-        'image_folder_en': 'cropped_imgs_en',
+        'saved_model_num': f'{p}recognition/custom_pth/ocr_num.pth',
+        'saved_model_en': f'{p}recognition/custom_pth/ocr_en.pth',
+        'image_folder_num': f'{p}cropped_imgs_num',
+        'image_folder_en': f'{p}cropped_imgs_en',
         'dict': dict,
         'workers': 4,
         'batch_size': 192,
@@ -199,9 +196,9 @@ def recog(dict):
     if opt['sensitive']:
         # opt['character_num'] = string.printable[:-6]  # same with ASTER setting (use 94 char).
         opt['character_en'] = string.printable[:-6]
-
+    log.write(f'{opt}')
     cudnn.benchmark = True
     cudnn.deterministic = True
     opt['num_gpu'] = torch.cuda.device_count()
 
-    return demo(opt)
+    return demo(opt, log)
