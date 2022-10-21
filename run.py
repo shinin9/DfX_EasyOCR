@@ -1,8 +1,9 @@
-from easyocr.easyocr import *
+import os
 import json
 import cv2
 from recognition.demo import *
 import shutil
+import numpy as np
 
 
 def get_files(path):
